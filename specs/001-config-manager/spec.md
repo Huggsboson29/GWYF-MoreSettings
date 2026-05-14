@@ -3,7 +3,7 @@
 **Feature Branch**: `001-config-manager`  
 **Created**: 2026-05-10  
 **Status**: Draft  
-**Input**: User description: "Reference the initial architecture and create the first ConfigManager feature for Gamble With Your Friends."
+**Input**: User description: "Reference the initial architecture and create the first MoreSettings feature for Gamble With Your Friends."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -13,7 +13,7 @@ As a host, I want to set the session's day length and quota pressure before the 
 starts so my group can choose a more relaxed or more intense pace without modifying the
 base game files.
 
-**Why this priority**: This is the core value of ConfigManager. Without host-controlled time
+**Why this priority**: This is the core value of MoreSettings. Without host-controlled time
 pressure settings, the mod does not solve the main player problem.
 
 **Independent Test**: Start a fresh host session with non-default time settings and verify

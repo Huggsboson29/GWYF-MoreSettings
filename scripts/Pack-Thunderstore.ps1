@@ -10,14 +10,14 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path $PSScriptRoot -Parent
-$projectFile = Join-Path $repoRoot 'src\ConfigManager\ConfigManager.csproj'
-$testsProject = Join-Path $repoRoot 'tests\ConfigManager.Tests\ConfigManager.Tests.csproj'
-$manifestPath = Join-Path $repoRoot 'src\ConfigManager\Packaging\manifest.json'
-$readmePath = Join-Path $repoRoot 'src\ConfigManager\Packaging\README.md'
-$changelogPath = Join-Path $repoRoot 'src\ConfigManager\Packaging\CHANGELOG.md'
-$iconPath = Join-Path $repoRoot 'src\ConfigManager\Packaging\icon.png'
+$projectFile = Join-Path $repoRoot 'src\MoreSettings\MoreSettings.csproj'
+$testsProject = Join-Path $repoRoot 'tests\MoreSettings.Tests\MoreSettings.Tests.csproj'
+$manifestPath = Join-Path $repoRoot 'src\MoreSettings\Packaging\manifest.json'
+$readmePath = Join-Path $repoRoot 'src\MoreSettings\Packaging\README.md'
+$changelogPath = Join-Path $repoRoot 'src\MoreSettings\Packaging\CHANGELOG.md'
+$iconPath = Join-Path $repoRoot 'src\MoreSettings\Packaging\icon.png'
 $gameManagedDir = Join-Path $GameRoot 'Gamble With Your Friends_Data\Managed'
-$releaseDll = Join-Path $repoRoot 'src\ConfigManager\bin\Release\netstandard2.1\ConfigManager.dll'
+$releaseDll = Join-Path $repoRoot 'src\MoreSettings\bin\Release\netstandard2.1\MoreSettings.dll'
 
 if ([string]::IsNullOrWhiteSpace($OutputRoot)) {
     $OutputRoot = Join-Path $repoRoot 'artifacts\thunderstore'
@@ -57,7 +57,7 @@ if ([string]::IsNullOrWhiteSpace($packageName) -or [string]::IsNullOrWhiteSpace(
 
 $stagingDir = Join-Path $OutputRoot 'staging'
 $packageDir = Join-Path $stagingDir $packageName
-$pluginsDir = Join-Path $packageDir 'plugins\ConfigManager'
+$pluginsDir = Join-Path $packageDir 'plugins\MoreSettings'
 
 if (Test-Path $stagingDir) {
     Remove-Item -LiteralPath $stagingDir -Recurse -Force
@@ -69,7 +69,7 @@ Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $packageDir 'manife
 Copy-Item -LiteralPath $readmePath -Destination (Join-Path $packageDir 'README.md') -Force
 Copy-Item -LiteralPath $changelogPath -Destination (Join-Path $packageDir 'CHANGELOG.md') -Force
 Copy-Item -LiteralPath $iconPath -Destination (Join-Path $packageDir 'icon.png') -Force
-Copy-Item -LiteralPath $releaseDll -Destination (Join-Path $pluginsDir 'ConfigManager.dll') -Force
+Copy-Item -LiteralPath $releaseDll -Destination (Join-Path $pluginsDir 'MoreSettings.dll') -Force
 
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 

@@ -82,7 +82,7 @@ jobs:
 
           .\scripts\Pack-Thunderstore.ps1 @arguments
 
-          $manifest = Get-Content -LiteralPath .\src\ConfigManager\Packaging\manifest.json -Raw | ConvertFrom-Json
+          $manifest = Get-Content -LiteralPath .\src\MoreSettings\Packaging\manifest.json -Raw | ConvertFrom-Json
           $zipPath = Join-Path $PWD ('artifacts\thunderstore\{0}-{1}.zip' -f $manifest.name, $manifest.version_number)
           if (-not (Test-Path $zipPath)) {
               throw "Expected package zip was not produced: $zipPath"

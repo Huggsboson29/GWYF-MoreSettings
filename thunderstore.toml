@@ -3,7 +3,7 @@ schemaVersion = "0.0.1"
 
 [package]
 namespace = "CHANGE_ME"
-name = "ConfigManager"
+name = "MoreSettings"
 versionNumber = "0.2.3"
 description = "Lets the lobby host change day length, starting quota, catch-up factor, and quota scaling from the lobby Settings tab."
 websiteUrl = ""
@@ -13,13 +13,13 @@ containsNsfwContent = false
 BepInEx-BepInExPack = "5.4.2305"
 
 [build]
-icon = "./src/ConfigManager/Packaging/icon.png"
-readme = "./src/ConfigManager/Packaging/README.md"
+icon = "./src/MoreSettings/Packaging/icon.png"
+readme = "./src/MoreSettings/Packaging/README.md"
 outdir = "./artifacts/thunderstore/tcli-build"
 
 [[build.copy]]
-source = "./src/ConfigManager/bin/Release/netstandard2.1/ConfigManager.dll"
-target = "plugins/ConfigManager/"
+source = "./src/MoreSettings/bin/Release/netstandard2.1/MoreSettings.dll"
+target = "plugins/MoreSettings/"
 
 [publish]
 repository = "https://thunderstore.io"

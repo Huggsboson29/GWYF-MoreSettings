@@ -10,14 +10,14 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $repoRoot = Split-Path $PSScriptRoot -Parent
-$projectFile = Join-Path $repoRoot 'src\ConfigManager\ConfigManager.csproj'
+$projectFile = Join-Path $repoRoot 'src\MoreSettings\MoreSettings.csproj'
 $fetchScript = Join-Path $repoRoot 'scripts\Fetch-DevDependencies.ps1'
 $bepInExExtract = Join-Path $repoRoot '.local\BepInEx\extract'
 $gameManagedDir = Join-Path $GameRoot 'Gamble With Your Friends_Data\Managed'
 $gameBepInExCoreDir = Join-Path $GameRoot 'BepInEx\core'
 $legacyPluginDir = Join-Path $GameRoot 'BepInEx\plugins\com.dylan.gwyf.timeconfig'
 $pluginDir = Join-Path $GameRoot 'BepInEx\plugins\com.lncinteractive'
-$outputDir = Join-Path $repoRoot "src\ConfigManager\bin\$Configuration\netstandard2.1"
+$outputDir = Join-Path $repoRoot "src\MoreSettings\bin\$Configuration\netstandard2.1"
 
 if (-not (Test-Path $GameRoot)) {
     throw "Game root was not found: $GameRoot"
@@ -36,7 +36,7 @@ Get-ChildItem -LiteralPath $bepInExExtract -Force |
 
 & dotnet build $projectFile -c $Configuration "/p:GameManagedDir=$gameManagedDir"
 
-if (-not (Test-Path (Join-Path $outputDir 'ConfigManager.dll'))) {
+if (-not (Test-Path (Join-Path $outputDir 'MoreSettings.dll'))) {
     throw "Expected build output was not found under: $outputDir"
 }
 
@@ -46,12 +46,19 @@ if ((Test-Path $legacyPluginDir) -and ($legacyPluginDir -ne $pluginDir)) {
 
 New-Item -ItemType Directory -Path $pluginDir -Force | Out-Null
 
-Copy-Item -LiteralPath (Join-Path $outputDir 'ConfigManager.dll') -Destination $pluginDir -Force
+foreach ($legacyArtifact in @('ConfigManager.dll', 'ConfigManager.pdb', 'LobbySettings.dll', 'LobbySettings.pdb')) {
+    $legacyArtifactPath = Join-Path $pluginDir $legacyArtifact
+    if (Test-Path $legacyArtifactPath) {
+        Remove-Item -LiteralPath $legacyArtifactPath -Force
+    }
+}
 
-$pdbPath = Join-Path $outputDir 'ConfigManager.pdb'
+Copy-Item -LiteralPath (Join-Path $outputDir 'MoreSettings.dll') -Destination $pluginDir -Force
+
+$pdbPath = Join-Path $outputDir 'MoreSettings.pdb'
 if (Test-Path $pdbPath) {
     Copy-Item -LiteralPath $pdbPath -Destination $pluginDir -Force
 }
 
-Write-Host "ConfigManager deployed to: $pluginDir"
+Write-Host "MoreSettings deployed to: $pluginDir"
 Write-Host "Expected config path after first launch: $(Join-Path $GameRoot 'BepInEx\config\com.lncinteractive.cfg')"

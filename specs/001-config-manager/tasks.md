@@ -20,9 +20,9 @@ testing of each story.
 
 **Purpose**: Create the initial plugin, build, and package layout described by the plan.
 
-- [ ] T001 Create the plugin directory structure in `src/ConfigManager/` and test structure in `tests/ConfigManager.Tests/`
-- [ ] T002 Create the main project file in `src/ConfigManager/ConfigManager.csproj`
-- [ ] T003 [P] Create packaging placeholders in `src/ConfigManager/Packaging/manifest.json`, `src/ConfigManager/Packaging/README.md`, `src/ConfigManager/Packaging/CHANGELOG.md`, and `src/ConfigManager/Packaging/icon.png`
+- [ ] T001 Create the plugin directory structure in `src/MoreSettings/` and test structure in `tests/MoreSettings.Tests/`
+- [ ] T002 Create the main project file in `src/MoreSettings/MoreSettings.csproj`
+- [ ] T003 [P] Create packaging placeholders in `src/MoreSettings/Packaging/manifest.json`, `src/MoreSettings/Packaging/README.md`, `src/MoreSettings/Packaging/CHANGELOG.md`, and `src/MoreSettings/Packaging/icon.png`
 
 ---
 
@@ -33,12 +33,12 @@ infrastructure that all user stories depend on.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 Implement plugin bootstrap and logging in `src/ConfigManager/PluginMain.cs`
-- [ ] T005 [P] Implement core models in `src/ConfigManager/Models/TimingProfile.cs`, `src/ConfigManager/Models/SessionTimingState.cs`, and `src/ConfigManager/Models/ValidationOutcome.cs`
-- [ ] T006 [P] Implement active/default settings binding in `src/ConfigManager/Configuration/ActiveSettings.cs`
-- [ ] T007 Implement profile validation rules in `src/ConfigManager/Configuration/Validation/TimingProfileValidator.cs`
-- [ ] T008 Implement the authoritative timing coordinator in `src/ConfigManager/Runtime/TimingCoordinator.cs`
-- [ ] T009 Implement shared patch registration scaffolding in `src/ConfigManager/Patches/DayTimerPatches.cs` and `src/ConfigManager/Patches/QuotaPatches.cs`
+- [ ] T004 Implement plugin bootstrap and logging in `src/MoreSettings/PluginMain.cs`
+- [ ] T005 [P] Implement core models in `src/MoreSettings/Models/TimingProfile.cs`, `src/MoreSettings/Models/SessionTimingState.cs`, and `src/MoreSettings/Models/ValidationOutcome.cs`
+- [ ] T006 [P] Implement active/default settings binding in `src/MoreSettings/Configuration/ActiveSettings.cs`
+- [ ] T007 Implement profile validation rules in `src/MoreSettings/Configuration/Validation/TimingProfileValidator.cs`
+- [ ] T008 Implement the authoritative timing coordinator in `src/MoreSettings/Runtime/TimingCoordinator.cs`
+- [ ] T009 Implement shared patch registration scaffolding in `src/MoreSettings/Patches/DayTimerPatches.cs` and `src/MoreSettings/Patches/QuotaPatches.cs`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -53,11 +53,11 @@ resolved day duration and quota pressure are applied to the shared run.
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Wire active session timing resolution into `src/ConfigManager/PluginMain.cs` and `src/ConfigManager/Runtime/TimingCoordinator.cs`
-- [ ] T011 [P] [US1] Implement authoritative day-length patch logic in `src/ConfigManager/Patches/DayTimerPatches.cs`
-- [ ] T012 [P] [US1] Implement authoritative quota-pressure patch logic in `src/ConfigManager/Patches/QuotaPatches.cs`
-- [ ] T013 [US1] Apply validated runtime timing values in `src/ConfigManager/Runtime/TimingCoordinator.cs`
-- [ ] T014 [US1] Surface invalid-setting rejection behavior in `src/ConfigManager/Configuration/Validation/TimingProfileValidator.cs` and `src/ConfigManager/Runtime/TimingCoordinator.cs`
+- [ ] T010 [US1] Wire active session timing resolution into `src/MoreSettings/PluginMain.cs` and `src/MoreSettings/Runtime/TimingCoordinator.cs`
+- [ ] T011 [P] [US1] Implement authoritative day-length patch logic in `src/MoreSettings/Patches/DayTimerPatches.cs`
+- [ ] T012 [P] [US1] Implement authoritative quota-pressure patch logic in `src/MoreSettings/Patches/QuotaPatches.cs`
+- [ ] T013 [US1] Apply validated runtime timing values in `src/MoreSettings/Runtime/TimingCoordinator.cs`
+- [ ] T014 [US1] Surface invalid-setting rejection behavior in `src/MoreSettings/Configuration/Validation/TimingProfileValidator.cs` and `src/MoreSettings/Runtime/TimingCoordinator.cs`
 
 **Checkpoint**: User Story 1 should be fully functional and independently testable
 
@@ -72,10 +72,10 @@ confirm the session uses the saved values; then restore vanilla behavior.
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Implement named profile persistence in `src/ConfigManager/Configuration/ProfileStore.cs`
-- [ ] T016 [US2] Implement profile create, update, and delete flows in `src/ConfigManager/Configuration/ProfileStore.cs`
-- [ ] T017 [US2] Integrate profile selection with the runtime coordinator in `src/ConfigManager/Configuration/ActiveSettings.cs` and `src/ConfigManager/Runtime/TimingCoordinator.cs`
-- [ ] T018 [US2] Implement restore-default behavior in `src/ConfigManager/Configuration/ActiveSettings.cs` and `src/ConfigManager/Runtime/TimingCoordinator.cs`
+- [ ] T015 [US2] Implement named profile persistence in `src/MoreSettings/Configuration/ProfileStore.cs`
+- [ ] T016 [US2] Implement profile create, update, and delete flows in `src/MoreSettings/Configuration/ProfileStore.cs`
+- [ ] T017 [US2] Integrate profile selection with the runtime coordinator in `src/MoreSettings/Configuration/ActiveSettings.cs` and `src/MoreSettings/Runtime/TimingCoordinator.cs`
+- [ ] T018 [US2] Implement restore-default behavior in `src/MoreSettings/Configuration/ActiveSettings.cs` and `src/MoreSettings/Runtime/TimingCoordinator.cs`
 
 **Checkpoint**: User Stories 1 and 2 should both work independently
 
@@ -90,10 +90,10 @@ joining player can identify the active timing state but cannot change it.
 
 ### Implementation for User Story 3
 
-- [ ] T019 [US3] Implement lobby/session settings presentation in `src/ConfigManager/Runtime/LobbySettingsPresenter.cs`
-- [ ] T020 [US3] Implement visibility patch hooks in `src/ConfigManager/Patches/LobbyVisibilityPatches.cs`
-- [ ] T021 [US3] Publish resolved timing state to joiners in `src/ConfigManager/Runtime/TimingCoordinator.cs` and `src/ConfigManager/Runtime/LobbySettingsPresenter.cs`
-- [ ] T022 [US3] Block non-host mutation attempts in `src/ConfigManager/Patches/LobbyVisibilityPatches.cs`
+- [ ] T019 [US3] Implement lobby/session settings presentation in `src/MoreSettings/Runtime/MoreSettingsPresenter.cs`
+- [ ] T020 [US3] Implement visibility patch hooks in `src/MoreSettings/Patches/LobbyVisibilityPatches.cs`
+- [ ] T021 [US3] Publish resolved timing state to joiners in `src/MoreSettings/Runtime/TimingCoordinator.cs` and `src/MoreSettings/Runtime/MoreSettingsPresenter.cs`
+- [ ] T022 [US3] Block non-host mutation attempts in `src/MoreSettings/Patches/LobbyVisibilityPatches.cs`
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -104,10 +104,10 @@ joining player can identify the active timing state but cannot change it.
 **Purpose**: Finish packaging, documentation, and release validation work that touches
 multiple stories.
 
-- [ ] T023 [P] Finalize Thunderstore package metadata in `src/ConfigManager/Packaging/manifest.json`
-- [ ] T024 [P] Finalize installation and usage guidance in `src/ConfigManager/Packaging/README.md` and `src/ConfigManager/Packaging/CHANGELOG.md`
+- [ ] T023 [P] Finalize Thunderstore package metadata in `src/MoreSettings/Packaging/manifest.json`
+- [ ] T024 [P] Finalize installation and usage guidance in `src/MoreSettings/Packaging/README.md` and `src/MoreSettings/Packaging/CHANGELOG.md`
 - [ ] T025 [P] Align quickstart validation steps with final behavior in `specs/001-config-manager/quickstart.md`
-- [ ] T026 Prepare release icon asset in `src/ConfigManager/Packaging/icon.png`
+- [ ] T026 Prepare release icon asset in `src/MoreSettings/Packaging/icon.png`
 
 ---
 
@@ -146,8 +146,8 @@ multiple stories.
 
 ```bash
 # After foundational runtime contracts are in place:
-Task: "Implement authoritative day-length patch logic in src/ConfigManager/Patches/DayTimerPatches.cs"
-Task: "Implement authoritative quota-pressure patch logic in src/ConfigManager/Patches/QuotaPatches.cs"
+Task: "Implement authoritative day-length patch logic in src/MoreSettings/Patches/DayTimerPatches.cs"
+Task: "Implement authoritative quota-pressure patch logic in src/MoreSettings/Patches/QuotaPatches.cs"
 ```
 
 ---

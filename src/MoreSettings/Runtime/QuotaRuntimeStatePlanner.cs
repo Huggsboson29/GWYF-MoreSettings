@@ -1,0 +1,20 @@
+using System;
+
+namespace MoreSettings.Runtime;
+
+public static class QuotaRuntimeStatePlanner
+{
+    public static int ComputeRemainingDays(int daysBeforeQuota, int daysPassed) =>
+        Math.Max(0, daysBeforeQuota - daysPassed);
+
+    public static bool ShouldResetInitialQuota(
+        long previousStartingQuota,
+        long currentQuota,
+        long requiredQuota,
+        int daysPassed,
+        int successfulQuota) =>
+        successfulQuota == 0 &&
+        daysPassed == 0 &&
+        currentQuota == previousStartingQuota &&
+        requiredQuota == previousStartingQuota;
+}

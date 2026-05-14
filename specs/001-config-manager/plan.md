@@ -5,7 +5,7 @@
 
 ## Summary
 
-Build a host-authoritative ConfigManager mod for *Gamble With Your Friends* that exposes day
+Build a host-authoritative MoreSettings mod for *Gamble With Your Friends* that exposes day
 length and quota pressure as reusable timing profiles, applies the selected profile to
 the authoritative shared session state, shows the active configuration to the lobby in
 read-only form, and packages the result for Thunderstore distribution.
@@ -70,7 +70,7 @@ specs/001-config-manager/
 
 ```text
 src/
-└── ConfigManager/
+└── MoreSettings/
     ├── PluginMain.cs
     ├── Configuration/
     │   ├── ActiveSettings.cs
@@ -86,7 +86,7 @@ src/
     │   └── LobbyVisibilityPatches.cs
     ├── Runtime/
     │   ├── TimingCoordinator.cs
-    │   └── LobbySettingsPresenter.cs
+    │   └── MoreSettingsPresenter.cs
     └── Packaging/
         ├── manifest.json
         ├── README.md
@@ -94,12 +94,12 @@ src/
         └── icon.png
 
 tests/
-└── ConfigManager.Tests/
+└── MoreSettings.Tests/
     ├── Configuration/
     └── Models/
 ```
 
-**Structure Decision**: Use a single plugin project rooted in `src/ConfigManager/` with
+**Structure Decision**: Use a single plugin project rooted in `src/MoreSettings/` with
 separate folders for configuration, runtime coordination, Harmony patches, and packaging
 artifacts. Keep tests focused on deterministic profile validation and data/model logic.
 

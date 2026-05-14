@@ -37,4 +37,28 @@ public sealed class QuotaRuntimeStatePlannerTests
 
         Assert.False(shouldReset);
     }
+
+    [Fact]
+    public void ShouldResetInitialMoney_ReturnsTrue_WhenStillOnStartingMoney()
+    {
+        var shouldReset = QuotaRuntimeStatePlanner.ShouldResetInitialMoney(
+            previousStartingMoney: 75L,
+            currentMoney: 75L,
+            daysPassed: 0,
+            successfulQuota: 0);
+
+        Assert.True(shouldReset);
+    }
+
+    [Fact]
+    public void ShouldResetInitialMoney_ReturnsFalse_AfterProgressBegins()
+    {
+        var shouldReset = QuotaRuntimeStatePlanner.ShouldResetInitialMoney(
+            previousStartingMoney: 75L,
+            currentMoney: 75L,
+            daysPassed: 1,
+            successfulQuota: 0);
+
+        Assert.False(shouldReset);
+    }
 }

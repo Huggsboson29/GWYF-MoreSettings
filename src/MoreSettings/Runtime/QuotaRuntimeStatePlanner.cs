@@ -17,4 +17,13 @@ public static class QuotaRuntimeStatePlanner
         daysPassed == 0 &&
         currentQuota == previousStartingQuota &&
         requiredQuota == previousStartingQuota;
+
+    public static bool ShouldResetInitialMoney(
+        long previousStartingMoney,
+        long currentMoney,
+        int daysPassed,
+        int successfulQuota) =>
+        successfulQuota == 0 &&
+        daysPassed == 0 &&
+        currentMoney == previousStartingMoney;
 }

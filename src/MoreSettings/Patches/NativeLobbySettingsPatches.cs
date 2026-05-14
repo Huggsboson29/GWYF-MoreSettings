@@ -1,5 +1,6 @@
 using HarmonyLib;
 using MoreSettings.Runtime;
+using UnityEngine;
 
 namespace MoreSettings.Patches;
 
@@ -57,5 +58,33 @@ internal static class NativeLobbySettingChangePatches
     private static void Postfix(SettingItemBase __instance)
     {
         NativeLobbySettingsMenu.HandleSettingChanged(__instance);
+    }
+}
+
+[HarmonyPatch]
+internal static class NativeLobbySliderPresentationPatches
+{
+    [HarmonyPrefix, HarmonyPatch(typeof(SettingsLayoutRuntimeUI), "CreateSliderEntry")]
+    private static void CreateSliderEntry_Prefix(RectTransform parent, out int __state)
+    {
+        __state = parent != null ? parent.childCount : 0;
+    }
+
+    [HarmonyPostfix, HarmonyPatch(typeof(SettingsLayoutRuntimeUI), "CreateSliderEntry")]
+    private static void CreateSliderEntry_Postfix(RectTransform parent, SliderSettingItem entry, int __state)
+    {
+        if (parent == null || entry == null || !NativeLobbySettingsMenu.IsManagedSliderKey(entry.key))
+        {
+            return;
+        }
+
+        if (parent.childCount <= __state)
+        {
+            return;
+        }
+
+        var createdRoot = parent.GetChild(parent.childCount - 1);
+        var contentRoot = createdRoot.childCount > 0 ? createdRoot.GetChild(0) : createdRoot;
+        NativeLobbySettingsMenu.RegisterSliderRuntimeBinding(entry.key, contentRoot);
     }
 }

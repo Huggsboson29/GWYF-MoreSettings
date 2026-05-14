@@ -78,6 +78,7 @@ public static class TimingCoordinator
                 baseProfile.DayDurationSeconds,
                 baseProfile.DaysBeforeQuota,
                 baseProfile.StartingQuota,
+                baseProfile.StartingMoney,
                 baseProfile.CatchUpFactor,
                 baseProfile.QuotaScalingMode,
                 baseProfile.QuotaMultipliers.Count,
@@ -304,6 +305,7 @@ public static class TimingCoordinator
             gameSettings.dayDuration,
             gameSettings.daysBeforeQuota,
             gameSettings.startingQuota,
+            gameSettings.startingMoney,
             gameSettings.catchUpFactor,
             QuotaScalingMode.Vanilla,
             (gameSettings.quotas ?? Array.Empty<float>()).ToArray());
@@ -318,6 +320,7 @@ public static class TimingCoordinator
             gameSettings.dayDuration,
             gameSettings.daysBeforeQuota,
             gameSettings.startingQuota,
+            gameSettings.startingMoney,
             gameSettings.catchUpFactor,
             QuotaScalingMode.Vanilla,
             (gameSettings.quotas ?? Array.Empty<float>()).ToArray());
@@ -356,6 +359,7 @@ public static class TimingCoordinator
     {
         gameSettings.dayDuration = profile.DayDurationSeconds;
         gameSettings.startingQuota = profile.StartingQuota;
+        gameSettings.startingMoney = profile.StartingMoney;
         gameSettings.catchUpFactor = profile.CatchUpFactor;
         gameSettings.quotas = profile.QuotaMultipliers.ToArray();
 
@@ -365,6 +369,7 @@ public static class TimingCoordinator
             profile.DayDurationSeconds,
             profile.DaysBeforeQuota,
             profile.StartingQuota,
+            profile.StartingMoney,
             profile.CatchUpFactor,
             profile.QuotaScalingMode,
             profile.QuotaMultipliers.Count,
@@ -373,7 +378,7 @@ public static class TimingCoordinator
         _log!.LogInfo(
             $"[{context}] Applied timing profile '{profile.Name}' " +
             $"(dayDuration={profile.DayDurationSeconds}, daysBeforeQuota={profile.DaysBeforeQuota}, " +
-            $"startingQuota={profile.StartingQuota}, catchUpFactor={profile.CatchUpFactor}, " +
+            $"startingQuota={profile.StartingQuota}, startingMoney={profile.StartingMoney}, catchUpFactor={profile.CatchUpFactor}, " +
             $"quotaScalingMode={profile.QuotaScalingMode}, " +
             $"quotaMultipliers={profile.QuotaMultipliers.Count}).");
     }
@@ -447,12 +452,14 @@ public static class TimingCoordinator
         {
             saveData.currentQuota = profile.StartingQuota;
             saveData.requiredQuotaToNextFloor = profile.StartingQuota;
+            saveData.money = profile.StartingMoney;
+            TrySyncMoneyManagerBalance(profile.StartingMoney);
         }
 
         _log!.LogInfo(
             $"[{context}] Applied save timing state " +
             $"(quotaReset={resetQuotaState}, currentQuota={saveData.currentQuota}, " +
-            $"requiredQuota={saveData.requiredQuotaToNextFloor}).");
+            $"requiredQuota={saveData.requiredQuotaToNextFloor}, money={saveData.money}).");
     }
 
     private static void ApplyManualProfileToSaveData(
@@ -468,21 +475,48 @@ public static class TimingCoordinator
             saveData.daysPassed,
             saveData.successfulQuota);
 
+        var shouldResetInitialMoney = QuotaRuntimeStatePlanner.ShouldResetInitialMoney(
+            previousProfile.StartingMoney,
+            saveData.money,
+            saveData.daysPassed,
+            saveData.successfulQuota);
+
         if (shouldResetInitialQuota)
         {
             saveData.currentQuota = updatedProfile.StartingQuota;
             saveData.requiredQuotaToNextFloor = updatedProfile.StartingQuota;
         }
 
+        if (shouldResetInitialMoney)
+        {
+            saveData.money = updatedProfile.StartingMoney;
+        }
+
+        if (shouldResetInitialMoney)
+        {
+            TrySyncMoneyManagerBalance(updatedProfile.StartingMoney);
+        }
+
         _log!.LogInfo(
             $"[{context}] Updated active save state " +
-            $"(preservedQuota={!shouldResetInitialQuota}).");
+            $"(preservedQuota={!shouldResetInitialQuota}, preservedMoney={!shouldResetInitialMoney}).");
     }
 
     private static bool CanUpdatePreDayRuntimeState(GameManager gameManager)
     {
         var hasDayStarted = HasDayStartedProperty?.GetValue(gameManager) as bool? ?? false;
         return !hasDayStarted;
+    }
+
+    private static void TrySyncMoneyManagerBalance(long balance)
+    {
+        var moneyManager = UnityEngine.Object.FindFirstObjectByType<MoneyManager>();
+        if (moneyManager == null)
+        {
+            return;
+        }
+
+        moneyManager.SetBalance(balance, null, ChangeType.Save);
     }
 
     private static int ReadIntProperty(System.Reflection.PropertyInfo? property, object instance) =>
@@ -507,6 +541,7 @@ public static class TimingCoordinator
         float dayDurationSeconds,
         int daysBeforeQuota,
         long startingQuota,
+        long startingMoney,
         float catchUpFactor,
         QuotaScalingMode quotaScalingMode,
         int quotaMultiplierCount,
@@ -519,6 +554,7 @@ public static class TimingCoordinator
             dayDurationSeconds,
             daysBeforeQuota,
             startingQuota,
+            startingMoney,
             catchUpFactor,
             quotaScalingMode,
             quotaMultiplierCount,

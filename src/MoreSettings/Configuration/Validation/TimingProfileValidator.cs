@@ -42,6 +42,20 @@ public static class TimingProfileValidator
                 $"Starting quota must be between 0 and {MaxQuotaValue}."));
         }
 
+        if (profile.StartingMoney < 0 || profile.StartingMoney > MaxQuotaValue)
+        {
+            outcomes.Add(ValidationOutcome.Error(
+                nameof(profile.StartingMoney),
+                $"Starting money must be between 0 and {MaxQuotaValue}."));
+        }
+
+        if (profile.StartingQuota < profile.StartingMoney)
+        {
+            outcomes.Add(ValidationOutcome.Error(
+                nameof(profile.StartingQuota),
+                "Starting quota must be greater than or equal to starting money."));
+        }
+
         if (profile.CatchUpFactor < MinCatchUpFactor || profile.CatchUpFactor > MaxCatchUpFactor)
         {
             outcomes.Add(ValidationOutcome.Error(

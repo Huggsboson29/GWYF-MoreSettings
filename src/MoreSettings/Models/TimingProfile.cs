@@ -11,6 +11,7 @@ public sealed class TimingProfile
         float dayDurationSeconds,
         int daysBeforeQuota,
         long startingQuota,
+        long startingMoney,
         float catchUpFactor,
         QuotaScalingMode quotaScalingMode,
         IReadOnlyList<float> quotaMultipliers)
@@ -20,6 +21,7 @@ public sealed class TimingProfile
         DayDurationSeconds = dayDurationSeconds;
         DaysBeforeQuota = daysBeforeQuota;
         StartingQuota = startingQuota;
+        StartingMoney = startingMoney;
         CatchUpFactor = catchUpFactor;
         QuotaScalingMode = quotaScalingMode;
         QuotaMultipliers = quotaMultipliers ?? throw new ArgumentNullException(nameof(quotaMultipliers));
@@ -34,6 +36,8 @@ public sealed class TimingProfile
     public int DaysBeforeQuota { get; }
 
     public long StartingQuota { get; }
+
+    public long StartingMoney { get; }
 
     public float CatchUpFactor { get; }
 

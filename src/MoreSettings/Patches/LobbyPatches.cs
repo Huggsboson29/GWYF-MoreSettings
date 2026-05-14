@@ -36,6 +36,7 @@ internal static class LobbyPatches
 
         TimingCoordinator.TryApplyToGameManagerRuntime(__instance, "GameManager.RpcSetInLobbyPresence");
         TimingCoordinator.TryApplyToActiveSaveData("GameManager.RpcSetInLobbyPresence");
+        NativeLobbySettingsMenu.RefreshRuntimeSliderBindings();
         LobbyVisibility.BroadcastCurrentState();
     }
 }

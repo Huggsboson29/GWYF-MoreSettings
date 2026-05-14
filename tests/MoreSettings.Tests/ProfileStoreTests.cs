@@ -26,6 +26,7 @@ public sealed class ProfileStoreTests
                 600f,
                 5,
                 200L,
+                150L,
                 0.5f,
                 QuotaScalingMode.CustomPattern,
                 new[] { 1.1f, 1.3f, 1.5f, 2.0f });
@@ -37,6 +38,7 @@ public sealed class ProfileStoreTests
             Assert.Equal(600f, loaded!.DayDurationSeconds);
             Assert.Equal(5, loaded.DaysBeforeQuota);
             Assert.Equal(200L, loaded.StartingQuota);
+            Assert.Equal(150L, loaded.StartingMoney);
             Assert.Equal(0.5f, loaded.CatchUpFactor);
             Assert.Equal(QuotaScalingMode.CustomPattern, loaded.QuotaScalingMode);
             Assert.Equal(new[] { 1.1f, 1.3f, 1.5f, 2.0f }, loaded.QuotaMultipliers);
@@ -69,7 +71,7 @@ public sealed class ProfileStoreTests
         try
         {
             var store = new ProfileStore(dir);
-            var dummy = new TimingProfile("x", false, 300f, 3, 100L, 0.75f, QuotaScalingMode.CustomPattern, new[] { 1.2f });
+            var dummy = new TimingProfile("x", false, 300f, 3, 100L, 75L, 0.75f, QuotaScalingMode.CustomPattern, new[] { 1.2f });
 
             store.Save("Zebra", dummy);
             store.Save("Alpha", dummy);
@@ -91,7 +93,7 @@ public sealed class ProfileStoreTests
         try
         {
             var store = new ProfileStore(dir);
-            var dummy = new TimingProfile("x", false, 300f, 3, 100L, 0.75f, QuotaScalingMode.Vanilla, Array.Empty<float>());
+            var dummy = new TimingProfile("x", false, 300f, 3, 100L, 75L, 0.75f, QuotaScalingMode.Vanilla, Array.Empty<float>());
             store.Save("ToDelete", dummy);
 
             Assert.True(store.Delete("ToDelete"));

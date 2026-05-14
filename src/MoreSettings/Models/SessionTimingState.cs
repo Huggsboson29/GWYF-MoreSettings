@@ -11,6 +11,7 @@ public sealed class SessionTimingState
         float dayDurationSeconds,
         int daysBeforeQuota,
         long startingQuota,
+        long startingMoney,
         float catchUpFactor,
         QuotaScalingMode quotaScalingMode,
         int quotaMultiplierCount,
@@ -22,6 +23,7 @@ public sealed class SessionTimingState
         DayDurationSeconds = dayDurationSeconds;
         DaysBeforeQuota = daysBeforeQuota;
         StartingQuota = startingQuota;
+        StartingMoney = startingMoney;
         CatchUpFactor = catchUpFactor;
         QuotaScalingMode = quotaScalingMode;
         QuotaMultiplierCount = quotaMultiplierCount;
@@ -39,6 +41,8 @@ public sealed class SessionTimingState
     public int DaysBeforeQuota { get; }
 
     public long StartingQuota { get; }
+
+    public long StartingMoney { get; }
 
     public float CatchUpFactor { get; }
 

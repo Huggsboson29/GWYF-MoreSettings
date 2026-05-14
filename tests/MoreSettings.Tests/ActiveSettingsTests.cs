@@ -14,6 +14,7 @@ public sealed class ActiveSettingsTests
         300f,
         3,
         100L,
+        75L,
         0.75f,
         QuotaScalingMode.Vanilla,
         Array.Empty<float>());
@@ -43,6 +44,7 @@ public sealed class ActiveSettingsTests
                 300f,
                 3,
                 100L,
+                75L,
                 0.75f,
                 QuotaScalingMode.Vanilla,
                 new[] { 1.2f, 1.3f });
@@ -75,6 +77,7 @@ public sealed class ActiveSettingsTests
                 600f,
                 10,
                 200L,
+                150L,
                 0.5f,
                 QuotaScalingMode.CustomPattern,
                 new[] { 1.1f, 1.3f });
@@ -82,7 +85,9 @@ public sealed class ActiveSettingsTests
             settings.SetManualOverrides(profile);
 
             var daysBeforeQuotaEntry = config.Bind("Timing", "DaysBeforeQuota", 0, string.Empty);
+            var startingMoneyEntry = config.Bind("Quota", "StartingMoney", 0L, string.Empty);
             Assert.Equal(ActiveSettings.PreserveInt, daysBeforeQuotaEntry.Value);
+            Assert.Equal(profile.StartingMoney, startingMoneyEntry.Value);
         }
         finally
         {
@@ -104,6 +109,7 @@ public sealed class ActiveSettingsTests
             Assert.Equal(TestVanillaDefaults.DayDurationSeconds, config.Bind("Timing", "DayDurationSeconds", 0f, string.Empty).Value);
             Assert.Equal(TestVanillaDefaults.DaysBeforeQuota, config.Bind("Timing", "DaysBeforeQuota", 0, string.Empty).Value);
             Assert.Equal(TestVanillaDefaults.StartingQuota, config.Bind("Quota", "StartingQuota", 0L, string.Empty).Value);
+            Assert.Equal(TestVanillaDefaults.StartingMoney, config.Bind("Quota", "StartingMoney", 0L, string.Empty).Value);
             Assert.Equal(TestVanillaDefaults.CatchUpFactor, config.Bind("Quota", "CatchUpFactor", 0f, string.Empty).Value);
             Assert.Equal(QuotaScalingMode.Vanilla.ToString(), config.Bind("Quota", "QuotaScalingMode", string.Empty, string.Empty).Value);
         }

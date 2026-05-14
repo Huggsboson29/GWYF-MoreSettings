@@ -47,6 +47,7 @@ public static class LobbyVisibility
             writer.WriteFloat(msg.DayDurationSeconds);
             writer.WriteInt(msg.DaysBeforeQuota);
             writer.WriteLong(msg.StartingQuota);
+            writer.WriteLong(msg.StartingMoney);
             writer.WriteFloat(msg.CatchUpFactor);
             writer.WriteInt(msg.QuotaScalingModeValue);
             writer.WriteInt(msg.QuotaMultiplierCount);
@@ -59,6 +60,7 @@ public static class LobbyVisibility
             DayDurationSeconds = reader.ReadFloat(),
             DaysBeforeQuota = reader.ReadInt(),
             StartingQuota = reader.ReadLong(),
+            StartingMoney = reader.ReadLong(),
             CatchUpFactor = reader.ReadFloat(),
             QuotaScalingModeValue = reader.ReadInt(),
             QuotaMultiplierCount = reader.ReadInt(),
@@ -106,6 +108,7 @@ public static class LobbyVisibility
             DayDurationSeconds = state.DayDurationSeconds,
             DaysBeforeQuota = state.DaysBeforeQuota,
             StartingQuota = state.StartingQuota,
+            StartingMoney = state.StartingMoney,
             CatchUpFactor = state.CatchUpFactor,
             QuotaScalingModeValue = (int)state.QuotaScalingMode,
             QuotaMultiplierCount = state.QuotaMultiplierCount,
@@ -123,6 +126,7 @@ public static class LobbyVisibility
             msg.DayDurationSeconds,
             msg.DaysBeforeQuota,
             msg.StartingQuota,
+            msg.StartingMoney,
             msg.CatchUpFactor,
             ResolveQuotaScalingMode(msg.QuotaScalingModeValue),
             msg.QuotaMultiplierCount,
@@ -137,7 +141,7 @@ public static class LobbyVisibility
             _log?.LogInfo(
                 $"[LobbyVisibility] Host timing profile '{msg.ProfileName}': " +
                 $"dayDuration={msg.DayDurationSeconds}s, daysBeforeQuota={msg.DaysBeforeQuota}, " +
-                $"startingQuota={msg.StartingQuota}, catchUpFactor={msg.CatchUpFactor}, " +
+                $"startingQuota={msg.StartingQuota}, startingMoney={msg.StartingMoney}, catchUpFactor={msg.CatchUpFactor}, " +
                 $"quotaScalingMode={ResolveQuotaScalingMode(msg.QuotaScalingModeValue)}, " +
                 $"quotaMultiplierCount={msg.QuotaMultiplierCount}");
         }

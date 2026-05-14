@@ -19,6 +19,7 @@ public sealed class ActiveSettings
     private readonly ConfigEntry<float> _dayDurationSeconds;
     private readonly ConfigEntry<int> _daysBeforeQuota;
     private readonly ConfigEntry<long> _startingQuota;
+    private readonly ConfigEntry<long> _startingMoney;
     private readonly ConfigEntry<float> _catchUpFactor;
     private readonly ConfigEntry<string> _quotaScalingMode;
     private readonly ConfigEntry<string> _quotaMultipliersCsv;
@@ -31,6 +32,7 @@ public sealed class ActiveSettings
         ConfigEntry<float> dayDurationSeconds,
         ConfigEntry<int> daysBeforeQuota,
         ConfigEntry<long> startingQuota,
+        ConfigEntry<long> startingMoney,
         ConfigEntry<float> catchUpFactor,
         ConfigEntry<string> quotaScalingMode,
         ConfigEntry<string> quotaMultipliersCsv,
@@ -42,6 +44,7 @@ public sealed class ActiveSettings
         _dayDurationSeconds = dayDurationSeconds;
         _daysBeforeQuota = daysBeforeQuota;
         _startingQuota = startingQuota;
+        _startingMoney = startingMoney;
         _catchUpFactor = catchUpFactor;
         _quotaScalingMode = quotaScalingMode;
         _quotaMultipliersCsv = quotaMultipliersCsv;
@@ -87,6 +90,12 @@ public sealed class ActiveSettings
             vanillaDefaults.StartingQuota,
             "Override the starting quota for new sessions. Defaults to the current vanilla value. Set -1 to preserve the loaded value.");
 
+        var startingMoney = config.Bind(
+            "Quota",
+            "StartingMoney",
+            vanillaDefaults.StartingMoney,
+            "Override the starting money for new sessions. Defaults to the current vanilla value. Set -1 to preserve the loaded value.");
+
         var catchUpFactor = config.Bind(
             "Quota",
             "CatchUpFactor",
@@ -123,6 +132,7 @@ public sealed class ActiveSettings
             dayDurationSeconds,
             daysBeforeQuota,
             startingQuota,
+            startingMoney,
             catchUpFactor,
             quotaScalingMode,
             quotaMultipliersCsv,
@@ -142,6 +152,7 @@ public sealed class ActiveSettings
             gameSettings.dayDuration,
             gameSettings.daysBeforeQuota,
             gameSettings.startingQuota,
+            gameSettings.startingMoney,
             gameSettings.catchUpFactor,
             QuotaScalingMode.Vanilla,
             (gameSettings.quotas ?? System.Array.Empty<float>()).ToArray());
@@ -154,6 +165,7 @@ public sealed class ActiveSettings
         _dayDurationSeconds.Value = profile.DayDurationSeconds;
         _daysBeforeQuota.Value = PreserveInt;
         _startingQuota.Value = profile.StartingQuota;
+        _startingMoney.Value = profile.StartingMoney;
         _catchUpFactor.Value = profile.CatchUpFactor;
         _quotaScalingMode.Value = profile.QuotaScalingMode.ToString();
         _quotaMultipliersCsv.Value = profile.QuotaScalingMode == QuotaScalingMode.CustomPattern
@@ -186,6 +198,10 @@ public sealed class ActiveSettings
         var resolvedStartingQuota = ResolveLong(
             stored?.StartingQuota ?? _startingQuota.Value,
             baseProfile.StartingQuota);
+
+        var resolvedStartingMoney = ResolveLong(
+            stored?.StartingMoney ?? _startingMoney.Value,
+            baseProfile.StartingMoney);
 
         var resolvedCatchUpFactor = ResolveFloat(
             stored?.CatchUpFactor ?? _catchUpFactor.Value,
@@ -225,6 +241,7 @@ public sealed class ActiveSettings
             resolvedDayDuration,
             resolvedDaysBeforeQuota,
             resolvedStartingQuota,
+            resolvedStartingMoney,
             resolvedCatchUpFactor,
             resolvedQuotaScalingMode,
             resolvedQuotaMultipliers.ToArray());

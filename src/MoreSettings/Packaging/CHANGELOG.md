@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.4
+
+- Add host-configurable starting money and apply it through runtime, save data, and lobby visibility sync
+- Lock starting money after entering the lobby, keep it linked to starting quota, and stabilize the native settings slider inputs
+- Add GitHub issue guidance to the package README and fix the live money balance sync during pre-day setup
+
 ## 0.2.3
 
 - Rename the package and shipped DLL from ConfigManager to MoreSettings

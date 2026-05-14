@@ -78,6 +78,7 @@ public sealed class ProfileStore
             ParseFloat(props, "DayDurationSeconds", ActiveSettings.PreserveFloat),
             ParseInt(props, "DaysBeforeQuota", ActiveSettings.PreserveInt),
             ParseLong(props, "StartingQuota", ActiveSettings.PreserveLong),
+            ParseLong(props, "StartingMoney", ActiveSettings.PreserveLong),
             ParseFloat(props, "CatchUpFactor", ActiveSettings.PreserveFloat),
             ParseQuotaScalingMode(props),
             ParseMultipliers(props));
@@ -95,6 +96,7 @@ public sealed class ProfileStore
             $"DayDurationSeconds={profile.DayDurationSeconds.ToString(CultureInfo.InvariantCulture)}",
             $"DaysBeforeQuota={profile.DaysBeforeQuota}",
             $"StartingQuota={profile.StartingQuota}",
+            $"StartingMoney={profile.StartingMoney}",
             $"CatchUpFactor={profile.CatchUpFactor.ToString(CultureInfo.InvariantCulture)}",
             $"QuotaScalingMode={profile.QuotaScalingMode}",
         };
@@ -164,6 +166,7 @@ public sealed class StoredProfile
         float dayDurationSeconds,
         int daysBeforeQuota,
         long startingQuota,
+        long startingMoney,
         float catchUpFactor,
         QuotaScalingMode? quotaScalingMode,
         float[] quotaMultipliers)
@@ -171,6 +174,7 @@ public sealed class StoredProfile
         DayDurationSeconds = dayDurationSeconds;
         DaysBeforeQuota = daysBeforeQuota;
         StartingQuota = startingQuota;
+        StartingMoney = startingMoney;
         CatchUpFactor = catchUpFactor;
         QuotaScalingMode = quotaScalingMode;
         QuotaMultipliers = quotaMultipliers;
@@ -179,6 +183,7 @@ public sealed class StoredProfile
     public float DayDurationSeconds { get; }
     public int DaysBeforeQuota { get; }
     public long StartingQuota { get; }
+    public long StartingMoney { get; }
     public float CatchUpFactor { get; }
     public QuotaScalingMode? QuotaScalingMode { get; }
     public float[] QuotaMultipliers { get; }

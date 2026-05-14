@@ -13,6 +13,7 @@ public struct TimingConfigMessage : NetworkMessage
     public float DayDurationSeconds;
     public int DaysBeforeQuota;
     public long StartingQuota;
+    public long StartingMoney;
     public float CatchUpFactor;
     public int QuotaScalingModeValue;
     public int QuotaMultiplierCount;

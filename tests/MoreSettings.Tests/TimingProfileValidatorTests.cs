@@ -14,6 +14,7 @@ public sealed class TimingProfileValidatorTests
             300f,
             3,
             100L,
+            75L,
             0.75f,
             QuotaScalingMode.CustomPattern,
             new[] { 1.2f, 1.3f, 1.5f });
@@ -33,6 +34,7 @@ public sealed class TimingProfileValidatorTests
             5f,
             3,
             100L,
+            75L,
             0.75f,
             QuotaScalingMode.CustomPattern,
             new[] { 1.2f, 1.3f });
@@ -43,6 +45,50 @@ public sealed class TimingProfileValidatorTests
             outcomes,
             outcome => outcome.Status == ValidationStatus.Error &&
                        outcome.TargetField == nameof(profile.DayDurationSeconds));
+    }
+
+    [Fact]
+    public void Validate_ReturnsError_WhenStartingMoneyIsOutOfRange()
+    {
+        var profile = new TimingProfile(
+            "BadMoney",
+            false,
+            300f,
+            3,
+            100L,
+            -1L,
+            0.75f,
+            QuotaScalingMode.Vanilla,
+            Array.Empty<float>());
+
+        var outcomes = TimingProfileValidator.Validate(profile);
+
+        Assert.Contains(
+            outcomes,
+            outcome => outcome.Status == ValidationStatus.Error &&
+                       outcome.TargetField == nameof(profile.StartingMoney));
+    }
+
+    [Fact]
+    public void Validate_ReturnsError_WhenStartingQuotaIsBelowStartingMoney()
+    {
+        var profile = new TimingProfile(
+            "BadQuotaLink",
+            false,
+            300f,
+            3,
+            50L,
+            75L,
+            0.75f,
+            QuotaScalingMode.Vanilla,
+            Array.Empty<float>());
+
+        var outcomes = TimingProfileValidator.Validate(profile);
+
+        Assert.Contains(
+            outcomes,
+            outcome => outcome.Status == ValidationStatus.Error &&
+                       outcome.TargetField == nameof(profile.StartingQuota));
     }
 
     [Fact]
@@ -68,6 +114,7 @@ public sealed class TimingProfileValidatorTests
             300f,
             3,
             100L,
+            75L,
             0.75f,
             QuotaScalingMode.Vanilla,
             Array.Empty<float>());

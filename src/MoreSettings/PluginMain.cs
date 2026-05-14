@@ -12,7 +12,7 @@ public sealed class PluginMain : BaseUnityPlugin
 {
     public const string PluginGuid = "com.lncinteractive";
     public const string PluginName = "MoreSettings";
-    public const string PluginVersion = "0.2.3";
+    public const string PluginVersion = "0.2.4";
 
     internal static ManualLogSource Log { get; private set; } = null!;
 

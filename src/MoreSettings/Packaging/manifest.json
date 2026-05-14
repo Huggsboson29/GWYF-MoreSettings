@@ -1,8 +1,8 @@
 {
   "name": "MoreSettings",
-  "version_number": "0.2.3",
+  "version_number": "0.2.4",
   "website_url": "https://github.com/Huggsboson29/GWYF-MoreSettings",
-  "description": "Lets the lobby host change day length, starting quota, catch-up factor, and quota scaling from the lobby Settings tab.",
+  "description": "Lets the lobby host set starting money before entering the lobby, then change day length, starting quota, catch-up factor, and quota scaling from the lobby Settings tab.",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2305"
   ]

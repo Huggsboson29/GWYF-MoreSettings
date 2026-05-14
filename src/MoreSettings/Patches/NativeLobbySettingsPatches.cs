@@ -18,6 +18,7 @@ internal static class NativeLobbySettingsRuntimeUIPatches
         var layout = LayoutRef(__instance);
         if (layout == null) return;
 
+        NativeLobbySettingsMenu.RegisterRuntimeLobbyLayout(layout, "SettingsLayoutRuntimeUI.Awake");
         NativeLobbySettingsMenu.EnsureInjected(layout, "SettingsLayoutRuntimeUI.Awake");
     }
 }

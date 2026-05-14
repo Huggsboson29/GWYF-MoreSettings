@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.5
+
+- Oops, I broke the timer :(
+- Fix the native lobby settings layout selection so starting money and quota edits no longer reset day duration to a stale value
+
 ## 0.2.4
 
 - Add host-configurable starting money and apply it through runtime, save data, and lobby visibility sync

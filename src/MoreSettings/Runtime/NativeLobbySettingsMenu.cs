@@ -31,6 +31,7 @@ public static class NativeLobbySettingsMenu
     public const string QuotaPatternLengthKey = "moresettings.quota-pattern-length";
 
     private static SettingsLayout? _lobbySettingsLayout;
+    private static SettingsLayout? _runtimeLobbySettingsLayout;
     private static bool _isSynchronizing;
 
     public static void RegisterLobbyLayout(SettingsLayout layout, string source)
@@ -44,6 +45,17 @@ public static class NativeLobbySettingsMenu
         PluginMain.Log.LogDebug($"[NativeLobbySettingsMenu] Registered lobby settings layout from {source}.");
     }
 
+    public static void RegisterRuntimeLobbyLayout(SettingsLayout layout, string source)
+    {
+        if (layout == null)
+        {
+            return;
+        }
+
+        _runtimeLobbySettingsLayout = layout;
+        PluginMain.Log.LogDebug($"[NativeLobbySettingsMenu] Registered runtime lobby settings layout from {source}.");
+    }
+
     public static bool EnsureInjected(SettingsLayout layout, string source)
     {
         if (layout == null)
@@ -55,8 +67,6 @@ public static class NativeLobbySettingsMenu
         {
             return false;
         }
-
-        RegisterLobbyLayout(layout, source);
 
         if (layout.tabs == null || layout.tabs.Count == 0)
         {
@@ -147,7 +157,8 @@ public static class NativeLobbySettingsMenu
 
     public static void HandleSettingChanged(SettingItemBase entry)
     {
-        if (_isSynchronizing || entry == null || !IsMoreSettingsKey(entry.key) || _lobbySettingsLayout == null)
+        var activeLayout = GetActiveLobbySettingsLayout();
+        if (_isSynchronizing || entry == null || !IsMoreSettingsKey(entry.key) || activeLayout == null)
         {
             return;
         }
@@ -164,7 +175,7 @@ public static class NativeLobbySettingsMenu
         }
 
         if (!TryGetEditableEntries(
-                _lobbySettingsLayout,
+            activeLayout,
                 out var dayDurationEntry,
                 out var startingMoneyEntry,
                 out var startingQuotaEntry,
@@ -215,7 +226,8 @@ public static class NativeLobbySettingsMenu
 
     private static void SyncFromCurrentState()
     {
-        if (_lobbySettingsLayout == null)
+        var activeLayout = GetActiveLobbySettingsLayout();
+        if (activeLayout == null)
         {
             return;
         }
@@ -226,9 +238,9 @@ public static class NativeLobbySettingsMenu
         }
 
         if (!TryGetEditableEntries(
-                _lobbySettingsLayout,
+                activeLayout,
                 out var dayDurationEntry,
-            out var startingMoneyEntry,
+                out var startingMoneyEntry,
                 out var startingQuotaEntry,
                 out var catchUpFactorEntry,
                 out var quotaScalingModeEntry,
@@ -342,6 +354,9 @@ public static class NativeLobbySettingsMenu
             ApplyRuntimeSliderPresentation(binding.Key, binding.Root);
         }
     }
+
+    private static SettingsLayout? GetActiveLobbySettingsLayout() =>
+        _runtimeLobbySettingsLayout ?? _lobbySettingsLayout;
 
     private static bool IsLobbySettingsLayout(SettingsLayout layout) =>
         FindTargetTab(layout) != null;
@@ -543,8 +558,9 @@ public static class NativeLobbySettingsMenu
 
     private static void ApplyRuntimeSliderPresentation(string key, Transform root)
     {
-        var runtimeEntry = _lobbySettingsLayout != null
-            ? FindEntry<SliderSettingItem>(_lobbySettingsLayout, key)
+        var activeLayout = GetActiveLobbySettingsLayout();
+        var runtimeEntry = activeLayout != null
+            ? FindEntry<SliderSettingItem>(activeLayout, key)
             : null;
 
         if (runtimeEntry != null)

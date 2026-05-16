@@ -29,9 +29,6 @@ public static class TimingCoordinator
     private static readonly System.Reflection.PropertyInfo? NetworkCurrentFloorProperty =
         AccessTools.Property(typeof(GameManager), "NetworkcurrentFloor");
 
-    private static readonly System.Reflection.PropertyInfo? NetworkRequiredQuotaProperty =
-        AccessTools.Property(typeof(GameManager), "NetworkrequiredQuotaToNextFloor");
-
     private static readonly System.Reflection.PropertyInfo? NetworkDaysLeftProperty =
         AccessTools.Property(typeof(GameManager), "NetworkdaysLeft");
 
@@ -168,8 +165,6 @@ public static class TimingCoordinator
         }
 
         var shouldResetPreDayState = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
-            saveData.currentQuota,
-            saveData.requiredQuotaToNextFloor,
             saveData.currentFloor,
             saveData.daysPassed,
             saveData.successfulQuota);
@@ -291,8 +286,6 @@ public static class TimingCoordinator
         }
 
         var shouldResetPreDayQuota = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
-            ReadLongProperty(NetworkCurrentQuotaProperty, gameManager),
-            ReadLongProperty(NetworkRequiredQuotaProperty, gameManager),
             ReadIntProperty(NetworkCurrentFloorProperty, gameManager),
             ReadIntProperty(NetworkDaysPassedProperty, gameManager),
             ReadIntProperty(NetworkSuccessfulQuotaProperty, gameManager));
@@ -430,13 +423,12 @@ public static class TimingCoordinator
         if (resetQuotaState)
         {
             NetworkCurrentQuotaProperty?.SetValue(gameManager, profile.StartingQuota);
-            NetworkRequiredQuotaProperty?.SetValue(gameManager, profile.StartingQuota);
         }
 
         _log!.LogInfo(
             $"[{context}] Applied pre-day runtime state to GameManager " +
             $"(timer={profile.DayDurationSeconds}, quotaReset={resetQuotaState}, " +
-            $"currentQuota={profile.StartingQuota}, requiredQuota={profile.StartingQuota}).");
+            $"currentQuota={profile.StartingQuota}).");
     }
 
     private static void ApplyManualProfileToGameManager(
@@ -458,14 +450,13 @@ public static class TimingCoordinator
         var shouldResetInitialQuota = QuotaRuntimeStatePlanner.ShouldResetInitialQuota(
             previousProfile.StartingQuota,
             ReadLongProperty(NetworkCurrentQuotaProperty, gameManager),
-            ReadLongProperty(NetworkRequiredQuotaProperty, gameManager),
+            ReadIntProperty(NetworkCurrentFloorProperty, gameManager),
             daysPassed,
             successfulQuota);
 
         if (shouldResetInitialQuota)
         {
             NetworkCurrentQuotaProperty?.SetValue(gameManager, updatedProfile.StartingQuota);
-            NetworkRequiredQuotaProperty?.SetValue(gameManager, updatedProfile.StartingQuota);
         }
 
         _log!.LogInfo(
@@ -483,7 +474,6 @@ public static class TimingCoordinator
         if (resetQuotaState)
         {
             saveData.currentQuota = profile.StartingQuota;
-            saveData.requiredQuotaToNextFloor = profile.StartingQuota;
         }
 
         if (resetMoneyState)
@@ -507,20 +497,20 @@ public static class TimingCoordinator
         var shouldResetInitialQuota = QuotaRuntimeStatePlanner.ShouldResetInitialQuota(
             previousProfile.StartingQuota,
             saveData.currentQuota,
-            saveData.requiredQuotaToNextFloor,
+            saveData.currentFloor,
             saveData.daysPassed,
             saveData.successfulQuota);
 
         var shouldResetInitialMoney = QuotaRuntimeStatePlanner.ShouldResetInitialMoney(
             previousProfile.StartingMoney,
             saveData.money,
+            saveData.currentFloor,
             saveData.daysPassed,
             saveData.successfulQuota);
 
         if (shouldResetInitialQuota)
         {
             saveData.currentQuota = updatedProfile.StartingQuota;
-            saveData.requiredQuotaToNextFloor = updatedProfile.StartingQuota;
         }
 
         if (shouldResetInitialMoney)

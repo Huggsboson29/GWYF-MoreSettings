@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.7
+
+- Fix floor unlock progression by preserving the base game's next-floor quota threshold instead of overwriting it with the starting quota value
+- Align lobby-time pre-day resets with the vanilla untouched-run state so only true new-run setup gets reinitialized
+
 ## 0.2.6
 
 - Fix the lobby-time quota reset guard so progressed runs keep their current floor progression instead of getting pushed back toward the initial quota state

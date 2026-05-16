@@ -13,12 +13,10 @@ public sealed class QuotaRuntimeStatePlannerTests
     }
 
     [Fact]
-    public void ShouldResetUntouchedPreDayState_ReturnsTrue_ForInitialFloorOneState()
+    public void ShouldResetUntouchedPreDayState_ReturnsTrue_ForInitialFloorZeroState()
     {
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
-            currentQuota: 120L,
-            requiredQuota: 120L,
-            currentFloor: 1,
+            currentFloor: 0,
             daysPassed: 0,
             successfulQuota: 0);
 
@@ -29,9 +27,7 @@ public sealed class QuotaRuntimeStatePlannerTests
     public void ShouldResetUntouchedPreDayState_ReturnsFalse_AfterFloorProgression()
     {
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
-            currentQuota: 120L,
-            requiredQuota: 120L,
-            currentFloor: 2,
+            currentFloor: 1,
             daysPassed: 0,
             successfulQuota: 1);
 
@@ -39,13 +35,11 @@ public sealed class QuotaRuntimeStatePlannerTests
     }
 
     [Fact]
-    public void ShouldResetUntouchedPreDayState_ReturnsFalse_WhenQuotaStateHasDiverged()
+    public void ShouldResetUntouchedPreDayState_ReturnsFalse_AfterAnyDayProgress()
     {
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
-            currentQuota: 140L,
-            requiredQuota: 120L,
-            currentFloor: 1,
-            daysPassed: 0,
+            currentFloor: 0,
+            daysPassed: 1,
             successfulQuota: 0);
 
         Assert.False(shouldReset);
@@ -57,7 +51,7 @@ public sealed class QuotaRuntimeStatePlannerTests
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetInitialQuota(
             previousStartingQuota: 120L,
             currentQuota: 120L,
-            requiredQuota: 120L,
+            currentFloor: 0,
             daysPassed: 0,
             successfulQuota: 0);
 
@@ -70,7 +64,7 @@ public sealed class QuotaRuntimeStatePlannerTests
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetInitialQuota(
             previousStartingQuota: 120L,
             currentQuota: 120L,
-            requiredQuota: 120L,
+            currentFloor: 1,
             daysPassed: 1,
             successfulQuota: 0);
 
@@ -83,6 +77,7 @@ public sealed class QuotaRuntimeStatePlannerTests
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetInitialMoney(
             previousStartingMoney: 75L,
             currentMoney: 75L,
+            currentFloor: 0,
             daysPassed: 0,
             successfulQuota: 0);
 
@@ -95,6 +90,7 @@ public sealed class QuotaRuntimeStatePlannerTests
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetInitialMoney(
             previousStartingMoney: 75L,
             currentMoney: 75L,
+            currentFloor: 1,
             daysPassed: 1,
             successfulQuota: 0);
 

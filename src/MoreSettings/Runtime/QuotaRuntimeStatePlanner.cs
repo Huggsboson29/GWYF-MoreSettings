@@ -8,33 +8,28 @@ public static class QuotaRuntimeStatePlanner
         Math.Max(0, daysBeforeQuota - daysPassed);
 
     public static bool ShouldResetUntouchedPreDayState(
-        long currentQuota,
-        long requiredQuota,
         int currentFloor,
         int daysPassed,
         int successfulQuota) =>
         successfulQuota == 0 &&
         daysPassed == 0 &&
-        currentFloor <= 1 &&
-        currentQuota == requiredQuota;
+        currentFloor <= 0;
 
     public static bool ShouldResetInitialQuota(
         long previousStartingQuota,
         long currentQuota,
-        long requiredQuota,
+        int currentFloor,
         int daysPassed,
         int successfulQuota) =>
-        successfulQuota == 0 &&
-        daysPassed == 0 &&
-        currentQuota == previousStartingQuota &&
-        requiredQuota == previousStartingQuota;
+        ShouldResetUntouchedPreDayState(currentFloor, daysPassed, successfulQuota) &&
+        currentQuota == previousStartingQuota;
 
     public static bool ShouldResetInitialMoney(
         long previousStartingMoney,
         long currentMoney,
+        int currentFloor,
         int daysPassed,
         int successfulQuota) =>
-        successfulQuota == 0 &&
-        daysPassed == 0 &&
+        ShouldResetUntouchedPreDayState(currentFloor, daysPassed, successfulQuota) &&
         currentMoney == previousStartingMoney;
 }

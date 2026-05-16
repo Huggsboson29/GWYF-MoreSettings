@@ -26,6 +26,9 @@ public static class TimingCoordinator
     private static readonly System.Reflection.PropertyInfo? NetworkCurrentQuotaProperty =
         AccessTools.Property(typeof(GameManager), "NetworkcurrentQuota");
 
+    private static readonly System.Reflection.PropertyInfo? NetworkCurrentFloorProperty =
+        AccessTools.Property(typeof(GameManager), "NetworkcurrentFloor");
+
     private static readonly System.Reflection.PropertyInfo? NetworkRequiredQuotaProperty =
         AccessTools.Property(typeof(GameManager), "NetworkrequiredQuotaToNextFloor");
 
@@ -117,7 +120,12 @@ public static class TimingCoordinator
             return false;
         }
 
-        ApplyResolvedProfileToSaveData(saveData, resolvedProfile!, context, resetQuotaState: true);
+        ApplyResolvedProfileToSaveData(
+            saveData,
+            resolvedProfile!,
+            context,
+            resetQuotaState: true,
+            resetMoneyState: true);
 
         return true;
     }
@@ -159,7 +167,19 @@ public static class TimingCoordinator
             return false;
         }
 
-        ApplyResolvedProfileToSaveData(saveData, resolvedProfile!, context, resetQuotaState: true);
+        var shouldResetPreDayState = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
+            saveData.currentQuota,
+            saveData.requiredQuotaToNextFloor,
+            saveData.currentFloor,
+            saveData.daysPassed,
+            saveData.successfulQuota);
+
+        ApplyResolvedProfileToSaveData(
+            saveData,
+            resolvedProfile!,
+            context,
+            resetQuotaState: shouldResetPreDayState,
+            resetMoneyState: shouldResetPreDayState);
         return true;
     }
 
@@ -270,7 +290,18 @@ public static class TimingCoordinator
             return false;
         }
 
-        ApplyResolvedProfileToGameManager(gameManager, resolvedProfile!, context);
+        var shouldResetPreDayQuota = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
+            ReadLongProperty(NetworkCurrentQuotaProperty, gameManager),
+            ReadLongProperty(NetworkRequiredQuotaProperty, gameManager),
+            ReadIntProperty(NetworkCurrentFloorProperty, gameManager),
+            ReadIntProperty(NetworkDaysPassedProperty, gameManager),
+            ReadIntProperty(NetworkSuccessfulQuotaProperty, gameManager));
+
+        ApplyResolvedProfileToGameManager(
+            gameManager,
+            resolvedProfile!,
+            context,
+            resetQuotaState: shouldResetPreDayQuota);
         return true;
     }
 
@@ -446,19 +477,24 @@ public static class TimingCoordinator
         SaveData saveData,
         TimingProfile profile,
         string context,
-        bool resetQuotaState)
+        bool resetQuotaState,
+        bool resetMoneyState)
     {
         if (resetQuotaState)
         {
             saveData.currentQuota = profile.StartingQuota;
             saveData.requiredQuotaToNextFloor = profile.StartingQuota;
+        }
+
+        if (resetMoneyState)
+        {
             saveData.money = profile.StartingMoney;
             TrySyncMoneyManagerBalance(profile.StartingMoney);
         }
 
         _log!.LogInfo(
             $"[{context}] Applied save timing state " +
-            $"(quotaReset={resetQuotaState}, currentQuota={saveData.currentQuota}, " +
+            $"(quotaReset={resetQuotaState}, moneyReset={resetMoneyState}, currentQuota={saveData.currentQuota}, " +
             $"requiredQuota={saveData.requiredQuotaToNextFloor}, money={saveData.money}).");
     }
 

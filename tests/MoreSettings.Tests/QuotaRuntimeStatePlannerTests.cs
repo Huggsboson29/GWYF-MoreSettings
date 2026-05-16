@@ -13,6 +13,45 @@ public sealed class QuotaRuntimeStatePlannerTests
     }
 
     [Fact]
+    public void ShouldResetUntouchedPreDayState_ReturnsTrue_ForInitialFloorOneState()
+    {
+        var shouldReset = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
+            currentQuota: 120L,
+            requiredQuota: 120L,
+            currentFloor: 1,
+            daysPassed: 0,
+            successfulQuota: 0);
+
+        Assert.True(shouldReset);
+    }
+
+    [Fact]
+    public void ShouldResetUntouchedPreDayState_ReturnsFalse_AfterFloorProgression()
+    {
+        var shouldReset = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
+            currentQuota: 120L,
+            requiredQuota: 120L,
+            currentFloor: 2,
+            daysPassed: 0,
+            successfulQuota: 1);
+
+        Assert.False(shouldReset);
+    }
+
+    [Fact]
+    public void ShouldResetUntouchedPreDayState_ReturnsFalse_WhenQuotaStateHasDiverged()
+    {
+        var shouldReset = QuotaRuntimeStatePlanner.ShouldResetUntouchedPreDayState(
+            currentQuota: 140L,
+            requiredQuota: 120L,
+            currentFloor: 1,
+            daysPassed: 0,
+            successfulQuota: 0);
+
+        Assert.False(shouldReset);
+    }
+
+    [Fact]
     public void ShouldResetInitialQuota_ReturnsTrue_WhenStillOnInitialQuota()
     {
         var shouldReset = QuotaRuntimeStatePlanner.ShouldResetInitialQuota(

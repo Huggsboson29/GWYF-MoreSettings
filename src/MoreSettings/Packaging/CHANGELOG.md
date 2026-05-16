@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.6
+
+- Fix the lobby-time quota reset guard so progressed runs keep their current floor progression instead of getting pushed back toward the initial quota state
+- Preserve starting money and quota values unless the run is still in an untouched floor-1 pre-day setup
+
 ## 0.2.5
 
 - Oops, I broke the timer :(

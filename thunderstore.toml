@@ -4,7 +4,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "CHANGE_ME"
 name = "MoreSettings"
-versionNumber = "0.2.5"
+versionNumber = "0.2.6"
 description = "Lets the lobby host set starting money before entering the lobby, then change day length, starting quota, catch-up factor, and quota scaling from the lobby Settings tab."
 websiteUrl = ""
 containsNsfwContent = false
